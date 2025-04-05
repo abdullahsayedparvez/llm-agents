@@ -1,0 +1,16 @@
+langchain
+langchain-openai
+langchain-community
+streamlit
+langserve
+fastapi
+uvicorn
+sse_starlette
+bs4
+pypdf
+arxiv
+wikipedia
+pandas
+streamlit
+openpyxl
+faiss-cpu
