@@ -41,7 +41,7 @@ if uploaded_file:
     st.session_state["excel_df"] = df
 
     st.subheader("👀 Preview of your data")
-    st.dataframe(df.head())
+    st.dataframe(st.session_state["excel_df"].head())
 
     # Generate summary
     if "excel_summary" not in st.session_state:
@@ -63,14 +63,32 @@ if uploaded_file:
             agent="zero-shot-react-description",
             verbose=True,
             max_iterations=15,  # or higher like 15
+            handle_parsing_errors=True
+            
         )
         st.session_state["agent"] = agent
+    # Initialize conversation history
+    if "conversation_history" not in st.session_state:
+        st.session_state["conversation_history"] = []
 
-    st.subheader("💬 Chat with the Excel Agent")
+    # Display conversation history
+    for idx, (user_msg, bot_msg) in enumerate(st.session_state["conversation_history"]):
+        st.markdown(f"**🧑 You:** {user_msg}")
+        st.markdown(f"**🤖 Agent:** {bot_msg}")
 
-    user_input = st.text_input("Ask a question about your data:")
-    if user_input:
+    st.markdown("---")
+
+    # Form for user input
+    with st.form("chat_form", clear_on_submit=True):
+        user_input = st.text_input("Ask a question about your data:", key="user_input")
+        submitted = st.form_submit_button("Send")
+
+    if submitted and user_input:
         with st.spinner("Thinking..."):
             response = st.session_state["agent"].run(user_input)
-            st.markdown("**🤖 Response:**")
-            st.write(response)
+            st.session_state["conversation_history"].append((user_input, response))
+
+        # Show updated dataframe if changed
+        if "excel_df" in st.session_state:
+            st.markdown("### 🔄 Updated DataFrame")
+            st.dataframe(st.session_state["excel_df"].head())
