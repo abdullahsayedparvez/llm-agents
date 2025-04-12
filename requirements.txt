@@ -15,3 +15,4 @@ streamlit
 openpyxl
 faiss-cpu
 duckduckgo-search
+unstructured[all]
