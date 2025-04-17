@@ -14,9 +14,9 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# Enable LangSmith tracing
-os.environ["LANGCHAIN_TRACING_V2"] = "true"
-os.environ["LANGCHAIN_API_KEY"] = os.getenv("LANGCHAIN_API_KEY")
+# # Enable LangSmith tracing
+# os.environ["LANGCHAIN_TRACING_V2"] = "true"
+# os.environ["LANGCHAIN_API_KEY"] = os.getenv("LANGCHAIN_API_KEY")
 
 # Model and base URL config
 OLLAMA_URL = os.getenv("OLLAMA_URL")
@@ -93,6 +93,7 @@ def process_file(file_path,ollama_model,ollama_embeddings,query):
         docs = load_file_as_documents(file_path)
         text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=100)
         documents = text_splitter.split_documents(docs)
+        print("\n📄 Sample Extracted Text:\n", docs[0].page_content[:1000])
         print(documents,f'--> length {len(documents)}')
         db = FAISS.from_documents(documents, ollama_embeddings)
         db.save_local(vector_store_path)
@@ -117,5 +118,5 @@ if __name__ == "__main__":
     file_path = rf'files/sample.pdf'
     ollama_model = OllamaLLM(model=LAAMA_3B, base_url=OLLAMA_URL)
     ollama_embeddings = OllamaEmbeddings(model=LAAMA_3B, base_url=OLLAMA_URL)
-    query = "give me the summary of the document pdf"
+    query = "give me the title of the file"
     process_file(file_path,ollama_model,ollama_embeddings,query)

@@ -1,4 +1,5 @@
 langchain
+langchain_ollama
 langchain-openai
 langchain-community
 streamlit
@@ -16,3 +17,8 @@ openpyxl
 faiss-cpu
 duckduckgo-search
 unstructured[all]
+pdfminer
+pdfminer.six==20221105
+pi_heif
+pinecone
+
